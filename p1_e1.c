@@ -1,4 +1,5 @@
 #include "node.h"
+#include "types.h"
 
  int main(){
     Node *n1, *n2;
@@ -12,23 +13,25 @@
     free(cadena1);
     free(cadena2);
 
-    printf("Son iguales? %s\n", nodeEquals(n1, n2) != 0 ? "No" : "Si" );
+    printf("Son iguales? %s\n", node_cmp(n1, n2) != OK ? "No" : "Si");
 
-    printf("Id primer nodo: %d\n", n1 -> id);
+    printf("Id primer nodo: %d\n", node_getId(n1));
 
-    printf("Nombre del segundo nodo es: %s\n", n2 -> name);
+    printf("Nombre del segundo nodo es: %s\n", node_getName(n2));
 
-    nodeCopy(n1,n2);
+    node_destroy(n2);
 
-    printf("%s%s\n",(cadena1 = nodePrint(n1)), (cadena2 = nodePrint(n2)));
+    n2 = node_copy(n1);
 
-    free(cadena1);
-    free(cadena2);
+    node_print(stdout, n1);
+    node_print(stdout, n2);
 
-    printf("Son iguales? %s\n", nodeEquals(n1, n2) != 0 ? "No" : "Si" );
+    printf("\n");
 
-    nodeFree(n1);
-    nodeFree(n2);
+    printf("Son iguales? %s\n", node_cmp(n1, n2) != 0 ? "No" : "Si");
+
+    node_destroy(n1);
+    node_destroy(n2);
 
     return 0;
 }
