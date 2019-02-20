@@ -1,55 +1,120 @@
 #include "graph.h"
 
-Graph *graph_ini() {
+Graph *graph_ini()
+{
+    Graph *g = (Graph *)malloc(sizeof(Graph));
 
+    return g;
 }
 
-void graph_destroy(Graph *g) {
+void graph_destroy(Graph *g)
+{
+    int i;
 
+    if (!g)
+    {
+        return;
+    }
+
+    for (i = 0; i < g->num_nodes; i++)
+    {
+        node_destroy(&g->nodes[i]);
+        free(g->connections[i]);
+    }
+
+    free(g->connections);
+    node_destroy(&g->nodes);
+    free(g);
 }
 
 Status graph_insertNode(Graph *g, const Node *n)
 {
+    Node *nc;
+
+    if (!g || !n)
+    {
+        return ERROR;
+    }
+
+    if (!(nc = node_copy(n)))
+    {
+        return ERROR;
+    }
+
+    g->nodes[g->num_nodes] = nc;
+    g->num_nodes++;
+
+    return OK;
 }
 
-Status graph_insertEdge(Graph *g, const int nId1, const int nId2) {
+Status graph_insertEdge(Graph *g, const int nId1, const int nId2)
+{
+
+    if (!g)
+    {
+        return ERROR;
+    }
+    if ((nId1 < 0 || nId1 > g->num_nodes) || (nId1 < 0 || nId1 > g->num_nodes))
+    {
+        return ERROR;
+    }
+
+    g->connections[nId1][nId2] = 1;
+
+    return OK;
+}
+
+Node *graph_getNode(const Graph *g, int nId)
+{
+    if (!g)
+    {
+        return ERROR;
+    }
+    if (nId < 0 || nId > g->num_nodes)
+    {
+        return ERROR;
+    }
+
+    return node_copy(g->nodes[nId]);
+}
+
+Status graph_setNode(Graph *g, const Node *n)
+{
+    if (!g || !n)
+    {
+        return ERROR;
+    }
+
+    
 
 }
 
-Node *graph_getNode(const Graph *g, int nId) {
-
+int *graph_getNodesId(const Graph *g)
+{
 }
 
-Status graph_setNode(Graph *g, const Node *n) {
-
+int graph_getNumberOfNodes(const Graph *g)
+{
 }
 
-int *graph_getNodesId(const Graph *g)  {
-
+int graph_getNumberOfEdges(const Graph *g)
+{
 }
 
-int graph_getNumberOfNodes(const Graph *g)  {
-
+Bool graph_areConnected(const Graph *g, const int nId1, const int nId2)
+{
 }
 
-int graph_getNumberOfEdges(const Graph *g) { 
-
+int graph_getNumberOfConnectionsFrom(const Graph *g, const int fromId)
+{
 }
 
-Bool graph_areConnected(const Graph *g, const int nId1, const int nId2) {
-
+int *graph_getConnectionsFrom(const Graph *g, const int fromId)
+{
 }
 
-int graph_getNumberOfConnectionsFrom(const Graph *g, const int fromId)  {
-
-}
-
-int *graph_getConnectionsFrom(const Graph *g, const int fromId) { 
-
-}
-
-int graph_print(FILE *pf, const Graph *g) {
-
+int graph_print(FILE *pf, const Graph *g)
+{
 }
 
 Status graph_readFromFile(FILE *fin, Graph *g)

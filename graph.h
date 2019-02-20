@@ -6,7 +6,7 @@
 
 struct _Graph
 {
-    Node * nodes;
+    Node ** nodes;
     int ** connections;
     int num_nodes;
 };
