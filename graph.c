@@ -1,39 +1,106 @@
 #include "graph.h"
 
-int find_node_index(const Graph * g, int nId1) {
- int i;
- if (!g) return -1;
+Graph *graph_ini() {
 
- for(i=0; i < g->num_nodes; i++) {
- if (node_getId (g->nodes[i]) == nId1) return i;
- }
-
- // ID not find
- return -1;
 }
-int* graph_getConectionsIndex(const Graph * g, int index) {
- int *array = NULL, i, j=0, size;
 
- if (!g) return NULL;
- if (index < 0 || index >g->num_nodes) return NULL;
- // get memory for the array with the connected nodes index
- size = node_getConnect (g->nodes[index]);
- array = (int *) malloc(sizeof(int) * size);
- if (!array) {
- // print errorr message
- fprintf (stderr, "%s\n", strerror(errno));
- return NULL;
- }
+void graph_destroy(Graph *g) {
 
- // asigno valores al array con los indices de los nodos conectados
- for(i = 0; i< g->num_nodes; i++) {
- if (g->connections[index][i] == TRUE) {
- array[j] = i;
- j++;
- }
- }
+}
 
- return array;
+Status graph_insertNode(Graph *g, const Node *n)
+{
+}
+
+Status graph_insertEdge(Graph *g, const int nId1, const int nId2) {
+
+}
+
+Node *graph_getNode(const Graph *g, int nId) {
+
+}
+
+Status graph_setNode(Graph *g, const Node *n) {
+
+}
+
+int *graph_getNodesId(const Graph *g)  {
+
+}
+
+int graph_getNumberOfNodes(const Graph *g)  {
+
+}
+
+int graph_getNumberOfEdges(const Graph *g) { 
+
+}
+
+Bool graph_areConnected(const Graph *g, const int nId1, const int nId2) {
+
+}
+
+int graph_getNumberOfConnectionsFrom(const Graph *g, const int fromId)  {
+
+}
+
+int *graph_getConnectionsFrom(const Graph *g, const int fromId) { 
+
+}
+
+int graph_print(FILE *pf, const Graph *g) {
+
+}
+
+Status graph_readFromFile(FILE *fin, Graph *g)
+{
+}
+
+int find_node_index(const Graph *g, int nId1)
+{
+    int i;
+    if (!g)
+        return -1;
+
+    for (i = 0; i < g->num_nodes; i++)
+    {
+        if (node_getId(g->nodes[i]) == nId1)
+            return i;
+    }
+
+    // ID not find
+    return -1;
+}
+
+int *graph_getConectionsIndex(const Graph *g, int index)
+{
+    int *array = NULL, i, j = 0, size;
+
+    if (!g)
+        return NULL;
+    if (index < 0 || index > g->num_nodes)
+        return NULL;
+    // get memory for the array with the connected nodes index
+    size = node_getConnect(g->nodes[index]);
+    array = (int *)malloc(sizeof(int) * size);
+    if (!array)
+    {
+        // print errorr message
+        fprintf(stderr, "%s\n", strerror(0));
+        return NULL;
+    }
+
+    // asigno valores al array con los indices de los nodos conectados
+    for (i = 0; i < g->num_nodes; i++)
+    {
+        if (g->connections[index][i] == TRUE)
+        {
+            array[j] = i;
+            j++;
+        }
+    }
+
+    return array;
 }
 
 Status graph_readFromFile(FILE *fin, Graph *g)

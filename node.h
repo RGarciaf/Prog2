@@ -5,6 +5,8 @@
 #include <string.h>
 #include "types.h"
 
+#define MAX 100
+
 struct _Node
 {
     char name[100];
