@@ -22,6 +22,9 @@ Node * node_ini(){
         return NULL;
     }
 
+    n->id = 0;
+    n->nConnect = 0;
+
     return n;
 }
 
@@ -67,7 +70,13 @@ int node_cmp (const Node * n1, const Node * n2) {
 }
 
 Node * node_copy(const Node * n1) {
-    Node * n2 = node_ini();
+    Node * n2;
+
+    if(!n1){
+        return NULL;
+    }
+
+    n2 = node_ini();
 
     if( !n2 )
         return NULL;    
