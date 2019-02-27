@@ -1,0 +1,17 @@
+Ejercicio 2:
+a) Deberia existir una funcion que abstraiga la creacion del nodo (node_ini())
+b) La direccion de memoria no se conserva al salir de la funcion, ya que, no se ha pasado el parametro n1 como referencia sino como valor
+c) No se ha creado memoria en la que guardar el puntero que se genera en node_ini, por lo que se perdera al salir de la funcion
+
+Ejercicio 3:
+Los parametros deben ser punteros, si no, al salir de la funcion no se conservaran los cambios y, por lo tanto, no se hara la copia
+
+Ejercicio 4:
+No es imprescindible pero si recomendable de cara al uso de memoria. Si no fuera con puntero, al llamar a la funcion, se haria una copia de toda la estructura, mienstras que usando un puntero solo tiene que pasar la direccion a la que apunta
+
+Ejercicio 5:
+Para que pudieramos usar los parametros para devolver la copia haria falta que ambos fueran punteros simples. El prototipo de puntero doble implica que hay una estructura compuesta por varios nodos, que deben tener memoria reservada anteriormente (donde se guarde el nodo copia y que no se pierda el nuevo puntero)
+
+Ejercicio 6:
+Porque son funciones que tienen que ver con la implementacion del modulo y no con su acceso.
+Si se publicaran dejaria de haber una capa de abstraccino entre el modulo y el llamante, ademas de, obligar al modulo a ser implementado con ciertas restricciones que tiene que cumplir la funcion.
