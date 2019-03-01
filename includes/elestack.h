@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "node.h"
 #include <types.h>
 
 typedef struct _EleStack EleStack;
@@ -23,7 +24,7 @@ Status EleStack_setInfo(EleStack *, void *);
 Devuelve el contenido almacenado en un elemento de pila (del tipo que sea). Entrada: El elemento de pila. Salida: El
 contenido de ese elemento, o NULL si ha habido error.
 ------------------------------------------------------------------*/
-void *EleStack_getInfo(EleStack *);
+void *EleStack_getInfo(const EleStack *);
 /**------------------------------------------------------------------
 Copia un elemento de pila en otro, reservando memoria. Entrada: el elemento a copiar. Salida: puntero al nuevo
 elemento, copia del recibido, o NULL en caso de error.

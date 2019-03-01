@@ -87,7 +87,7 @@ Bool stack_isEmpty(const Stack *s)
     }
 
     /* Si ESTA VACIA devuelvo TRUE */
-    return s->top == -1 ? 1 : 0; /* FALSE = 0, TRUE = 1 */
+    return s->top == -1 ? TRUE : FALSE; /* FALSE = 0, TRUE = 1 */
 }
 
 Bool stack_isFull(const Stack *s)
