@@ -7,7 +7,7 @@ HEADERS = -I includes
 SRC = src/
 SRCLIB = srclib/
 
-EXE = p1_e1 p1_e2
+EXE = p1_e1 p1_e2 p2_e1
 
 all: clean $(EXE) clear
 
@@ -16,7 +16,7 @@ clean:
 	rm -f $(EXE) *.o *.h.gch lib/*
 
 clear:
-	rm -f *.o *.h.gch
+	rm -f *.o *.h.gch 
 
 libsource.a: node.o graph.o stack_elestack.o elestack.o
 	ar rcs lib/libsource.a $^

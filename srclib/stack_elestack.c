@@ -46,8 +46,6 @@ void stack_destroy(Stack *s)
 
 Status stack_push(Stack *s, const EleStack *ele)
 {
-    int top;
-
     EleStack *eleCopy;
     if (!s || !ele)
     {
@@ -58,12 +56,8 @@ Status stack_push(Stack *s, const EleStack *ele)
     {
         return ERROR;
     }
-    top = s->top;
-    
-    s->item[top] = eleCopy;
 
-    top ++;
-    s->top = top;
+    s->item[++s->top] = eleCopy;
 
     return OK;
 }
@@ -76,7 +70,11 @@ EleStack *stack_pop(Stack *s)
         return NULL;
     }
 
-    if (!(ele = s->item[--s->top]))
+    if(s->top < 0){
+        return NULL;
+    }
+
+    if (!(ele = s->item[s->top--]))
     {
         s->top++;
         return NULL;
@@ -119,7 +117,7 @@ int stack_print(FILE *f, const Stack *s)
     for (i = s->top; i > -1; i--)
     {
         ret += EleStack_print(f, s->item[i]);
-        fprintf(f,"\n");
+        fprintf(f, "\n");
     }
 
     return ret;

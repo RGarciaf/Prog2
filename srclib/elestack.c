@@ -75,6 +75,7 @@ EleStack *EleStack_copy(const EleStack *ele)
         EleStack_destroy(elecp);
         return NULL;
     }
+    node_destroy((Node *)info);
 
     return elecp;
 }

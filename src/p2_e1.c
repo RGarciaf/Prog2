@@ -29,7 +29,7 @@
         EleStack_destroy(eleaux);
     }
 
-    printf("Contenido de la pila despues de vaciar:\n");
+    printf("\nContenido de la pila despues de vaciar:\n");
     printf("Caracteres imprimidos: %d\n", stack_print(stdout, s1));
 
     node_destroy(n1);
@@ -37,7 +37,6 @@
      
     EleStack_destroy(ele1);
     EleStack_destroy(ele2);
-    EleStack_destroy(eleaux);
 
     stack_destroy(s1);
 
