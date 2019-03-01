@@ -1,33 +1,81 @@
-#include "graph.h"
-#include "types.h"
+#include "stack_elestack.h"
 
- int main(){
-    Node *n1, *n2;
-    Graph * g;
-    int id1 = 111 , id2=222;
+Status comprueba_entrada(int argc, char ** argv){
+    
+    
+    return argc >= 2 ? OK : ERROR;
+}
 
-    n1 = nodeIni(id1, "first");
-    n2 = nodeIni(id2, "second");
+Status introduce_numeros(Stack * s, int n){
+    EleStack * ele = EleStack_ini();
+    int i;
 
-    g = graph_ini();
+    if(!ele){
+        return ERROR;
+    }
 
-    printf("Insertando nodo 1...resultado...:%d\n", graph_insertNode(g,n1));
-    printf("Insertando nodo 2...resultado...:%d\n", graph_insertNode(g,n2));
+    for(i = 0; i <= n; i++){
+        EleStack_setInfo(ele, &i);
+        stack_push(s, ele);
+    }
 
-    graph_insertEdge(g,id1, id2);
-    printf("Insertando edge: nodo2 --> nodo 1\n");
+    EleStack_destroy(ele);
 
-    printf("Conectados nodo 1 y nodo 2? %s\n", graph_areConnected(g,id1, id2) == TRUE ? "Si" : "No");
-    printf("Conectados nodo 2 y nodo 1? %s\n", graph_areConnected(g,id2, id1) == TRUE ? "Si" : "No");
+    return OK;
+}
 
-    printf("Insertando nodo 2...resultado...:%d\n", graph_insertNode(g,n2));
+double media(Stack * s){
+    Stack * stackaux = stack_ini();;
+    double media;
+    int * info = NULL;
+    EleStack * eleaux = NULL;
 
-    graph_print( stdout, g);
+    while(stack_isEmpty(s) == FALSE){
+        eleaux = stack_pop(s);
+        info = (int *) EleStack_getInfo(eleaux);
 
-    node_destroy(n1);
-    node_destroy(n2);
+        media += *info;
 
-    graph_destroy(g);
+        stack_push(stackaux, eleaux);
+        EleStack_destroy(eleaux);
+        free(info);
+    }
+
+    while(stack_isEmpty(stackaux) == FALSE){
+        eleaux = stack_pop(stackaux);
+        stack_push(s, eleaux);
+        EleStack_destroy(eleaux);
+    }
+
+    stack_destroy(stackaux);
+
+    return media/(double) stack_getNelements(s);
+    
+}
+
+ int main(int argc, char ** argv){
+    Stack *s = NULL ;    
+
+    if(comprueba_entrada(argc, argv) == ERROR){
+        printf("Uso: %s <numero>\n", argv[0]);
+        return -1;
+    }
+
+    s = stack_ini();
+
+    if(introduce_numeros(s,atoi(argv[1])) == ERROR) {
+        return -1;
+    }
+
+    printf("Pila antes de la llamada a la funcion: \n");
+    stack_print(stdout, s);
+
+    printf("La media es %f\n",media(s));
+
+    printf("Pila despues de la llamada a la funcion: \n");
+    stack_print(stdout, s);
+
+    stack_destroy(s);
 
     return 0;
 }

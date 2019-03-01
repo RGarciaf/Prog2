@@ -11,6 +11,9 @@ typedef struct _Stack Stack;
 Inicializa la pila reservando memoria. Salida: NULL si ha habido error o el puntero a la pila si ha ido bien
 ------------------------------------------------------------------*/
 Stack *stack_ini();
+
+int stack_getNelements(Stack * s);
+
 /**------------------------------------------------------------------
 Elimina la pila Entrada: puntero a la pila que se desea eliminar
 ------------------------------------------------------------------*/

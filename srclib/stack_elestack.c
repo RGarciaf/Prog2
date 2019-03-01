@@ -27,6 +27,14 @@ Stack *stack_ini()
     return s;
 }
 
+int stack_getNelements(Stack * s){
+    if (!s)
+    {
+        return -1;
+    }
+    return s->top +1;
+}
+
 void stack_destroy(Stack *s)
 {
     EleStack *ele;

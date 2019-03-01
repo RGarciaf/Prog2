@@ -1,5 +1,4 @@
 #include "stack_elestack.h"
-#include "types.h"
 
  int main(){
     Node *n1, *n2;

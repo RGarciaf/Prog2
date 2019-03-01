@@ -2,7 +2,7 @@
 
 struct _EleStack
 {
-    Node *info;
+    int info;
 };
 
 EleStack *EleStack_ini()
@@ -14,7 +14,7 @@ EleStack *EleStack_ini()
         return NULL;
     }
 
-    ele->info = NULL;
+    ele->info = 0;
 
     return ele;
 }
@@ -27,32 +27,33 @@ void EleStack_destroy(EleStack *ele)
         return;
     }
 
-    node_destroy(ele->info);
-
     free(ele);
 }
 
-Status EleStack_setInfo(EleStack *ele, void *node)
+Status EleStack_setInfo(EleStack *ele, void *info)
 {
 
-    if (!ele || !node)
+    if (!ele || !info)
     {
         return ERROR;
     }
 
-    node_destroy(ele->info); /* No necesita comprobar si es NULL, ya tiene esa comprobacion la funcion */    
+    ele->info = *((int *) info);
 
-    return !(ele->info = node_copy((Node *)node)) ? ERROR : OK;
+    return OK;
 }
 
 void *EleStack_getInfo(const EleStack *ele)
 {
-    if (!ele)
+    int *info = (int *)malloc(sizeof(int));
+    if (!ele || !info)
     {
         return NULL;
     }
 
-    return (void *)node_copy(ele->info); /* Comprobar si funciona, que tengo mis dudas... si node_copy devuelve NULL...*/
+    *info = ele->info;
+
+    return info;
 }
 
 EleStack *EleStack_copy(const EleStack *ele)
@@ -71,11 +72,12 @@ EleStack *EleStack_copy(const EleStack *ele)
 
     if (EleStack_setInfo(elecp, (info = EleStack_getInfo(ele))) == ERROR)
     {
-        node_destroy((Node *)info);
+        free(info);
         EleStack_destroy(elecp);
         return NULL;
     }
-    node_destroy((Node *)info);
+
+    free(info);
 
     return elecp;
 }
@@ -88,7 +90,7 @@ Bool EleStack_equals(const EleStack *ele1, const EleStack *ele2)
         return FALSE;
     }
 
-    return node_cmp((Node *)ele1->info, (Node *)ele2->info) != 0 ? FALSE : TRUE;
+    return ele1->info != ele2->info ? FALSE : TRUE;
 }
 
 int EleStack_print(FILE *f, const EleStack *ele)
@@ -99,5 +101,5 @@ int EleStack_print(FILE *f, const EleStack *ele)
         return -1;
     }
 
-    return node_print(f, (Node *)ele->info);
+    return fprintf(f, "[%d] ", ele->info );
 }
