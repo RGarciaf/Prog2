@@ -91,7 +91,7 @@ int node_print(FILE *pf, const Node * node) {
     if (!pf || !node)
         return -1;
 
-    return fprintf(pf, "[%d, %s, %d]", node -> id, node -> name, node -> nConnect);
+    return fprintf(pf, "[%d, %s, %d] ", node -> id, node -> name, node -> nConnect);
 }
 
 Node * nodeIni(int id, char * name) {

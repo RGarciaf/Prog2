@@ -18,7 +18,7 @@ clean:
 clear:
 	rm -f *.o *.h.gch
 
-libsource.a: node.o graph.o 
+libsource.a: node.o graph.o stack_elestack.o elestack.o
 	ar rcs lib/libsource.a $^
 
 p1_e1: $(SRC)p1_e1.c libsource.a

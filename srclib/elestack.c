@@ -40,6 +40,8 @@ Status EleStack_setInfo(EleStack *ele, void *node)
         return ERROR;
     }
 
+    node_destroy(ele->info); /* No necesita comprobar si es NULL, ya tiene esa comprobacion la funcion */    
+
     return !(ele->info = node_copy((Node *)node)) ? ERROR : OK;
 }
 
