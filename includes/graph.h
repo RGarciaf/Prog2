@@ -75,4 +75,6 @@ int graph_print(FILE *pf,  Graph * g);
 /* Lee de un flujo de entrada la información asociada a un grafo */
 Status graph_readFromFile (FILE *fin, Graph *g);
 
+Node * graph_findDeepSearch(Graph * g, Node * v, Node * to);
+
 #endif /* GRAPH_H */

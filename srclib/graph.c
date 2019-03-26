@@ -1,4 +1,6 @@
 #include "graph.h"
+#include "stack_fp.h"
+#include "node.h"
 
 int graph_getNode_index(Graph *g, int id);
 
@@ -205,12 +207,12 @@ int graph_getNumberOfConnectionsFrom(Graph *gr, int fromId)
 
     i = graph_getNode_index(g, fromId);
 
-    for (j = 0, edges = 0; j < g->num_nodes; j++)
+    /*for (j = 0, edges = 0; j < g->num_nodes; j++)
     {
         edges += g->connections[i][j];
-    }
+    }*/
 
-    return edges;
+    return node_getConnect(g->nodes[i])
 }
 
 int *graph_getConnectionsFrom(Graph *g, int fromId)
@@ -321,6 +323,53 @@ int *graph_getConectionsIndex(Graph *g, int index)
     }
 
     return array;
+}
+
+Node *graph_findDeepSearch(Graph *g, Node *v, Node *to)
+{
+    Stack *s = stack_ini((P_stack_ele_destroy)node_destroy, (P_stack_ele_copy)node_copy, (P_stack_ele_print)node_print);
+    Node *n, *naux;
+    int id, *ids, i;
+
+    if (!g || !v || !to)
+    {
+        return NULL;
+    }
+
+    stack_push(s, (void *)v);
+
+    while (stack_isEmpty(s) == FALSE)
+    {
+        n = (Node *)stack_pop(s);
+
+        if (node_getEtiqueta(n) == BLANCO)
+        {
+            node_setEtiqueta(n, NEGRO);
+
+            for (id = ids[i], ids = graph_getConnectionsFrom(g, node_getId(n)), i = 0; i < node_getConnect(n); i++, id = ids[i])
+            {
+
+                if (ids[i] == node_getId(to))
+                {
+                    free(ids);
+                    node_destroy(n);
+                    stack_destroy(s);
+                    return graph_getNode(id);
+                }
+
+                naux = graph_getNode(g, id);
+                if (node_getEtiqueta(naux) == BLANCO)
+                {
+                    stack_push(s, (void *)naux);
+                }
+                node_destroy(naux);
+            }
+        }
+
+        node_destroy(n);
+    }
+
+    stack_destroy(s);
 }
 
 /*
