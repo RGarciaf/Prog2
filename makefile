@@ -3,12 +3,13 @@ CFLAGS = -Wall -ansi -pedantic -g -std=gnu99
 COMPILE = -c
 LIB_NODE = -Llib -lsource_node
 LIB_INT = -Llib -lsource_int
+LIB = -Llib -lsource
 HEADERS = -I includes
 
 SRC = src/
 SRCLIB = srclib/
 
-EXE = p1_e1 p1_e2 p2_e1 p2_e2
+EXE = p1_e1 p1_e2 p2_e1 p2_e2 p2_e1_pf p2_e2_pf
 
 all: clean $(EXE) clear
 
@@ -25,6 +26,9 @@ libsource_node.a: node.o graph.o stack_elestack.o  elestack_node.o
 libsource_int.a: node.o graph.o stack_elestack.o  elestack_int.o 
 	ar rcs lib/$@ $^
 
+libsource.a: node.o graph.o stack_fp.o elestack_int.o
+	ar rcs lib/$@ $^
+
 p1_e1: $(SRC)p1_e1.c libsource_node.a
 	$(CC) $(CFLAGS) $< $(HEADERS) $(LIB_NODE) -o $@
 
@@ -36,6 +40,12 @@ p2_e1: $(SRC)p2_e1.c libsource_node.a
 
 p2_e2: $(SRC)p2_e2.c libsource_int.a
 	$(CC) $(CFLAGS) $< $(HEADERS) $(LIB_INT) -o $@
+
+p2_e1_pf: $(SRC)p2_e1_pf.c libsource.a
+	$(CC) $(CFLAGS) $< $(HEADERS) $(LIB) -o $@
+
+p2_e2_pf: $(SRC)p2_e2_pf.c libsource.a 
+	$(CC) $(CFLAGS) $< $(HEADERS) $(LIB) -o $@
 
 
 node.o : $(SRCLIB)node.c
@@ -53,6 +63,13 @@ graph.o : $(SRCLIB)graph.c
 	$(CC) $(CFLAGS) $(COMPILE) $^ $(HEADERS)
 
 stack_elestack.o : $(SRCLIB)stack_elestack.c
+	@echo "#---------------------------"
+	@echo "# Generando $@"
+	@echo "# Depende de $^"
+	@echo "# Ha cambiado $<"
+	$(CC) $(CFLAGS) $(COMPILE) $^ $(HEADERS)
+
+stack_fp.o : $(SRCLIB)stack_fp.c
 	@echo "#---------------------------"
 	@echo "# Generando $@"
 	@echo "# Depende de $^"
