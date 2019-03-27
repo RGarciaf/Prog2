@@ -1,6 +1,7 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 #include "node.h"
+#include <errno.h>
 
 #define MAX_LINE MAX
 #define MAX_NODES 4086

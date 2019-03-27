@@ -2,6 +2,7 @@
 #include "stack_fp.h"
 #include "node.h"
 
+
 int graph_getNode_index(Graph *g, int id);
 
 Graph *graph_ini()
@@ -80,7 +81,7 @@ Status graph_insertEdge(Graph *g, int nId1, int nId2)
     return OK;
 }
 
-Node *graph_getNode(Graph *g, int nId)
+Node * graph_getNode(Graph *g, int nId)
 {
     int i;
     /*Graph gc = *gr;
@@ -115,19 +116,18 @@ int graph_getNode_index(Graph *g, int id)
 
 Status graph_setNode(Graph *g, Node *nc)
 {
-    Node *n1, np = *nc;
-    Node *n = &np;
+    Node * n1;
     char *name;
 
-    if (!g || !n)
+    if (!g || !nc)
     {
         return ERROR;
     }
 
-    n1 = g->nodes[graph_getNode_index(g, node_getId(n))];
+    n1 = g->nodes[graph_getNode_index(g, node_getId(nc))];
 
-    node_setConnect(n1, node_getConnect(n));
-    node_setName(n, (name = node_getName(n)));
+    node_setConnect(n1, node_getConnect(nc));
+    node_setName(n1, (name = node_getName(nc)));
 
     free(name);
 
@@ -196,7 +196,7 @@ Bool graph_areConnected(Graph *g, int nId1, int nId2)
 
 int graph_getNumberOfConnectionsFrom(Graph *gr, int fromId)
 {
-    int i, j, edges;
+    int i;
     Graph gc = *gr;
     Graph *g = &gc;
 
@@ -212,7 +212,7 @@ int graph_getNumberOfConnectionsFrom(Graph *gr, int fromId)
         edges += g->connections[i][j];
     }*/
 
-    return node_getConnect(g->nodes[i])
+    return node_getConnect(g->nodes[i]);
 }
 
 int *graph_getConnectionsFrom(Graph *g, int fromId)
@@ -272,11 +272,6 @@ int graph_print(FILE *pf, Graph *g)
         ret += fprintf(pf, "\n");
     }
     return ret;
-}
-
-Status graph_readFromFile(FILE *fin, Graph *g)
-{
-    return ERROR;
 }
 
 int find_node_index(Graph *g, int nId1)
@@ -354,7 +349,7 @@ Node *graph_findDeepSearch(Graph *g, Node *v, Node *to)
                     free(ids);
                     node_destroy(n);
                     stack_destroy(s);
-                    return graph_getNode(id);
+                    return graph_getNode(g,id);
                 }
 
                 naux = graph_getNode(g, id);
@@ -370,9 +365,11 @@ Node *graph_findDeepSearch(Graph *g, Node *v, Node *to)
     }
 
     stack_destroy(s);
+
+    return NULL;
 }
 
-/*
+
 Status graph_readFromFile(FILE *fin, Graph *g)
 {
     Node *n;
@@ -428,4 +425,4 @@ Status graph_readFromFile(FILE *fin, Graph *g)
     // clean up, free resources
     node_destroy(n);
     return flag;
-}*/
+}
