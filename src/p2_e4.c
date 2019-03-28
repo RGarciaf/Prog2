@@ -13,7 +13,7 @@
     graph_readFromFile(f,g);
 
     n1 = graph_getNode(g, 1);
-    n2 = graph_getNode(g, 3);
+    n2 = graph_getNode(g, 13);
 
     if(!(naux = graph_findDeepSearch(g, n1, n2))){
         printf("No hay camino\n");

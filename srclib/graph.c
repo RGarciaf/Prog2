@@ -8,8 +8,23 @@ int graph_getNode_index(Graph *g, int id);
 Graph *graph_ini()
 {
     Graph *g = (Graph *)malloc(sizeof(Graph));
+    int j, i;
+
+    if(!g){
+        return NULL;
+    }
 
     g->num_nodes = 0;
+
+    for(i = 0; i < MAX_NODES; i++)
+    {
+        for(j = 0; j < MAX_NODES; j++)
+        {
+            g -> connections[i][j] = 0;
+        }
+        
+    }
+    
 
     return g;
 }
@@ -116,20 +131,18 @@ int graph_getNode_index(Graph *g, int id)
 
 Status graph_setNode(Graph *g, Node *nc)
 {
-    Node * n1;
-    char *name;
+    int index;
 
     if (!g || !nc)
     {
         return ERROR;
     }
 
-    n1 = g->nodes[graph_getNode_index(g, node_getId(nc))];
 
-    node_setConnect(n1, node_getConnect(nc));
-    node_setName(n1, (name = node_getName(nc)));
+    index = graph_getNode_index(g, node_getId(nc));
 
-    free(name);
+    node_destroy(g->nodes[index]);
+    g->nodes[index] = node_copy(nc);
 
     return OK;
 }
@@ -217,7 +230,7 @@ int graph_getNumberOfConnectionsFrom(Graph *gr, int fromId)
 
 int *graph_getConnectionsFrom(Graph *g, int fromId)
 {
-    int i, j, k, *ids;
+    int i = 0, j=0, k=0, *ids=NULL, index = 0, connects = 0;
     /*Graph gc = *gr;
     Graph * g = &gc;*/
 
@@ -226,7 +239,10 @@ int *graph_getConnectionsFrom(Graph *g, int fromId)
         return ERROR;
     }
 
-    ids = (int *)malloc(sizeof(int) * node_getConnect(g->nodes[graph_getNode_index(g, fromId)]));
+    index = graph_getNode_index(g, fromId);
+    connects = node_getConnect(g->nodes[index]);
+
+    ids = (int *)malloc(sizeof(int) * connects);
 
     if (!ids)
     {
@@ -326,7 +342,7 @@ Node *graph_findDeepSearch(Graph *g, Node *v, Node *to)
     Node *n, *naux;
     int id, *ids, i;
 
-    if (!g || !v || !to)
+    if (!g || !v || !to || !s)
     {
         return NULL;
     }
@@ -340,6 +356,7 @@ Node *graph_findDeepSearch(Graph *g, Node *v, Node *to)
         if (node_getEtiqueta(n) == BLANCO)
         {
             node_setEtiqueta(n, NEGRO);
+            graph_setNode(g, n);
 
             for (ids = graph_getConnectionsFrom(g, node_getId(n)), i = node_getConnect(n) -1, id = ids[i]; i > -1; id = ids[--i])
             {
