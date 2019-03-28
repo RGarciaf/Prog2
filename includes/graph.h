@@ -1,6 +1,7 @@
 #ifndef GRAPH_H
 #define GRAPH_H
 #include "node.h"
+#include "stack_fp.h"
 #include <errno.h>
 
 #define MAX_LINE MAX
@@ -77,5 +78,7 @@ int graph_print(FILE *pf,  Graph * g);
 Status graph_readFromFile (FILE *fin, Graph *g);
 
 Node * graph_findDeepSearch(Graph * g, Node * v, Node * to);
+
+Stack * graph_findDeepSearch_getPath(Graph *g, Node *v, Node *to);
 
 #endif /* GRAPH_H */

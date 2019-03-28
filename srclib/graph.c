@@ -1,9 +1,7 @@
 #include "graph.h"
-#include "stack_fp.h"
-#include "node.h"
-
 
 int graph_getNode_index(Graph *g, int id);
+Stack * recupera_camino(Graph* g, Stack * s, Node * to);
 
 Graph *graph_ini()
 {
@@ -385,6 +383,75 @@ Node *graph_findDeepSearch(Graph *g, Node *v, Node *to)
     stack_destroy(s);
 
     return NULL;
+}
+
+Stack *graph_findDeepSearch_getPath(Graph *g, Node *v, Node *to)
+{
+    Stack *s = stack_ini((P_stack_ele_destroy)node_destroy, (P_stack_ele_copy)node_copy, (P_stack_ele_print)node_print);
+    Stack * s_ret = NULL;
+    Node *n, *naux;
+    int id, *ids, i;
+
+    if (!g || !v || !to || !s)
+    {
+        return NULL;
+    }
+
+    stack_push(s, (void *)v);
+
+    while (stack_isEmpty(s) == FALSE)
+    {
+        n = (Node *)stack_pop(s);
+
+        if (node_getEtiqueta(n) == BLANCO)
+        {
+            node_setEtiqueta(n, NEGRO);
+            graph_setNode(g, n);
+
+            for (ids = graph_getConnectionsFrom(g, node_getId(n)), i = node_getConnect(n) -1, id = ids[i]; i > -1; id = ids[--i])
+            {
+
+                if (id == node_getId(to))
+                {
+                    s_ret = recupera_camino(g, s, to);
+                    free(ids);
+                    node_destroy(n);
+                    stack_destroy(s);
+                    return s_ret;
+                }
+
+                naux = graph_getNode(g, id);
+                if (node_getEtiqueta(naux) == BLANCO)
+                {
+                    stack_push(s, (void *)naux);
+                }
+                node_destroy(naux);
+            }
+            free(ids);
+        }
+
+        node_destroy(n);
+    }
+
+    stack_destroy(s);
+
+    return NULL;
+}
+
+Stack * recupera_camino(Graph* g, Stack * s, Node * to){
+    Node * n, *naux;
+    Stack * saux = stack_ini((P_stack_ele_destroy)node_destroy, (P_stack_ele_copy)node_copy, (P_stack_ele_print)node_print);
+    
+    while (stack_isEmpty(s) == FALSE){
+        n = stack_pop(s);
+        naux = graph_getNode(g,node_getId(n));
+        if (node_getEtiqueta(naux) == NEGRO) {
+            stack_push(saux, (void *)naux);
+        }
+        node_destroy(n);
+        node_destroy(naux);
+    }
+    return saux;
 }
 
 
