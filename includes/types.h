@@ -10,7 +10,7 @@ typedef enum
 {
     ERROR = 0,
     OK = 1,
-    NO_FILE_POS_VALUES = 3
+    NO_FILE_POS_VALUES = 2 
 } Status;
 
 typedef enum

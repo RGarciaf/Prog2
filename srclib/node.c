@@ -38,9 +38,9 @@ Node *node_ini()
     n->id = 0;
     n->nConnect = 0;
     n->antecesor_id = -1;
-    n->etq = BLANCO
+    n->etq = BLANCO;
 
-        return n;
+    return n;
 }
 
 void node_destroy(Node *n)
@@ -71,7 +71,7 @@ Label node_getEtiqueta(const Node *n)
     return n->etq;
 }
 
-Node *node_setEtiqueta(const Node *n, Label etq)
+Node *node_setEtiqueta(Node *n, Label etq)
 {
     n->etq = etq;
     return n;
@@ -82,7 +82,7 @@ Label node_getAntecesor(const Node *n)
     return n->antecesor_id;
 }
 
-Node *node_setAntecesor(const Node *n, int antecesor_id)
+Node *node_setAntecesor( Node *n, int antecesor_id)
 {
     n->antecesor_id = antecesor_id;
     return n;
@@ -129,6 +129,9 @@ Node *node_copy(const Node *n1)
         return NULL;
 
     n2->id = n1->id;
+    n2->antecesor_id = n1->antecesor_id;
+    n2->etq = n1->etq;
+    n2->nConnect = n1->nConnect;
     strcpy(n2->name, n1->name);
     return n2;
 }

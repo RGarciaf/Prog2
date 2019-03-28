@@ -221,7 +221,7 @@ int *graph_getConnectionsFrom(Graph *g, int fromId)
     /*Graph gc = *gr;
     Graph * g = &gc;*/
 
-    if (!g)
+    if (!g || fromId < 0)
     {
         return ERROR;
     }
@@ -341,10 +341,10 @@ Node *graph_findDeepSearch(Graph *g, Node *v, Node *to)
         {
             node_setEtiqueta(n, NEGRO);
 
-            for (id = ids[i], ids = graph_getConnectionsFrom(g, node_getId(n)), i = 0; i < node_getConnect(n); i++, id = ids[i])
+            for (ids = graph_getConnectionsFrom(g, node_getId(n)), i = node_getConnect(n) -1, id = ids[i]; i > -1; id = ids[--i])
             {
 
-                if (ids[i] == node_getId(to))
+                if (id == node_getId(to))
                 {
                     free(ids);
                     node_destroy(n);
@@ -359,6 +359,7 @@ Node *graph_findDeepSearch(Graph *g, Node *v, Node *to)
                 }
                 node_destroy(naux);
             }
+            free(ids);
         }
 
         node_destroy(n);

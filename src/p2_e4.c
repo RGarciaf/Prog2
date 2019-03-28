@@ -1,43 +1,33 @@
-#include "stack_elestack.h"
+#include "stack_fp.h"
+#include "graph.h"
+#include "node.h"
 
- int main(){
-    Node *n1, *n2;
-    EleStack *ele1, *ele2, * eleaux;
-    Stack *s1;    
+ int main(int argc, char ** argv){
+    Graph * g = graph_ini();
+    FILE * f = fopen("inputs/g2_s.txt", "r");
+    Node * n1, * n2, *naux;
 
-    n1 = nodeIni(111, "first");
-    n2 = nodeIni(222, "second");
+    if(!f || !g)
+        return -1;
 
-    ele1 = EleStack_ini();
-    ele2 = EleStack_ini();
+    graph_readFromFile(f,g);
 
-    s1 = stack_ini();
+    n1 = graph_getNode(g, 1);
+    n2 = graph_getNode(g, 3);
 
-    EleStack_setInfo(ele1, (void *) n1);
-    EleStack_setInfo(ele2, (void *) n2);
-
-    stack_push(s1, ele1);
-    stack_push(s1, ele2);
-    
-    printf("Contenido de la pila: \n");
-    printf("Caracteres imprimidos: %d\n", stack_print(stdout, s1));
-
-    printf("Vaciando pila. Extracciones:\n");
-    while(stack_isEmpty(s1) != TRUE){
-        EleStack_print(stdout, (eleaux = stack_pop(s1)));
-        EleStack_destroy(eleaux);
+    if(!(naux = graph_findDeepSearch(g, n1, n2))){
+        printf("No hay camino\n");
+    } else {
+        printf("Se ha encontrado camino\n");
+        node_destroy(naux);
     }
-
-    printf("\nContenido de la pila despues de vaciar:\n");
-    printf("Caracteres imprimidos: %d\n", stack_print(stdout, s1));
 
     node_destroy(n1);
     node_destroy(n2);
-     
-    EleStack_destroy(ele1);
-    EleStack_destroy(ele2);
 
-    stack_destroy(s1);
+    graph_destroy(g);
+
+    fclose(f);
 
     return 0;
 }

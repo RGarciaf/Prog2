@@ -9,7 +9,7 @@ HEADERS = -I includes
 SRC = src/
 SRCLIB = srclib/
 
-EXE = p1_e1 p1_e2 p2_e1 p2_e2 p2_e1_pf p2_e2_pf
+EXE = p1_e1 p1_e2 p2_e1 p2_e2 p2_e1_pf p2_e2_pf p2_e4
 
 all: clean $(EXE) clear
 
@@ -45,6 +45,9 @@ p2_e1_pf: $(SRC)p2_e1_pf.c libsource.a
 	$(CC) $(CFLAGS) $< $(HEADERS) $(LIB) -o $@
 
 p2_e2_pf: $(SRC)p2_e2_pf.c libsource.a 
+	$(CC) $(CFLAGS) $< $(HEADERS) $(LIB) -o $@
+
+p2_e4: $(SRC)p2_e4.c libsource.a
 	$(CC) $(CFLAGS) $< $(HEADERS) $(LIB) -o $@
 
 

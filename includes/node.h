@@ -35,11 +35,11 @@ int node_getConnect(const Node *n);
 
 Label node_getEtiqueta(const Node * n);
 
-Node * node_setEtiqueta(const Node * n, Label etq);
+Node * node_setEtiqueta( Node * n, Label etq);
 
 Label node_getAntecesor(const Node * n);
 
-Node * node_setAntecesor(const Node * n, int antecesor_id);
+Node * node_setAntecesor( Node * n, int antecesor_id);
 
 
 /* Modifica el id de un nodo dado, devuelve NULL en caso de error */
