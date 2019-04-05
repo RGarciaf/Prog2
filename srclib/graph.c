@@ -1,28 +1,27 @@
 #include "graph.h"
 
 int graph_getNode_index(Graph *g, int id);
-Stack * recupera_camino(Graph* g, Stack * s, Node * to);
+Stack *recupera_camino(Graph *g, Stack *s, Node *to);
 
 Graph *graph_ini()
 {
     Graph *g = (Graph *)malloc(sizeof(Graph));
     int j, i;
 
-    if(!g){
+    if (!g)
+    {
         return NULL;
     }
 
     g->num_nodes = 0;
 
-    for(i = 0; i < MAX_NODES; i++)
+    for (i = 0; i < MAX_NODES; i++)
     {
-        for(j = 0; j < MAX_NODES; j++)
+        for (j = 0; j < MAX_NODES; j++)
         {
-            g -> connections[i][j] = 0;
+            g->connections[i][j] = 0;
         }
-        
     }
-    
 
     return g;
 }
@@ -94,7 +93,7 @@ Status graph_insertEdge(Graph *g, int nId1, int nId2)
     return OK;
 }
 
-Node * graph_getNode(Graph *g, int nId)
+Node *graph_getNode(Graph *g, int nId)
 {
     int i;
     /*Graph gc = *gr;
@@ -135,7 +134,6 @@ Status graph_setNode(Graph *g, Node *nc)
     {
         return ERROR;
     }
-
 
     index = graph_getNode_index(g, node_getId(nc));
 
@@ -228,7 +226,7 @@ int graph_getNumberOfConnectionsFrom(Graph *gr, int fromId)
 
 int *graph_getConnectionsFrom(Graph *g, int fromId)
 {
-    int i = 0, j=0, k=0, *ids=NULL, index = 0, connects = 0;
+    int i = 0, j = 0, k = 0, *ids = NULL, index = 0, connects = 0;
     /*Graph gc = *gr;
     Graph * g = &gc;*/
 
@@ -356,7 +354,7 @@ Node *graph_findDeepSearch(Graph *g, Node *v, Node *to)
             node_setEtiqueta(n, NEGRO);
             graph_setNode(g, n);
 
-            for (ids = graph_getConnectionsFrom(g, node_getId(n)), i = node_getConnect(n) -1, id = ids[i]; i > -1; id = ids[--i])
+            for (ids = graph_getConnectionsFrom(g, node_getId(n)), i = node_getConnect(n) - 1, id = ids[i]; i > -1; id = ids[--i])
             {
 
                 if (id == node_getId(to))
@@ -364,7 +362,7 @@ Node *graph_findDeepSearch(Graph *g, Node *v, Node *to)
                     free(ids);
                     node_destroy(n);
                     stack_destroy(s);
-                    return graph_getNode(g,id);
+                    return graph_getNode(g, id);
                 }
 
                 naux = graph_getNode(g, id);
@@ -388,7 +386,7 @@ Node *graph_findDeepSearch(Graph *g, Node *v, Node *to)
 Stack *graph_findDeepSearch_getPath(Graph *g, Node *v, Node *to)
 {
     Stack *s = stack_ini((P_stack_ele_destroy)node_destroy, (P_stack_ele_copy)node_copy, (P_stack_ele_print)node_print);
-    Stack * s_ret = NULL;
+    Stack *s_ret = NULL;
     Node *n, *naux;
     int id, *ids, i;
 
@@ -408,7 +406,7 @@ Stack *graph_findDeepSearch_getPath(Graph *g, Node *v, Node *to)
             node_setEtiqueta(n, NEGRO);
             graph_setNode(g, n);
 
-            for (ids = graph_getConnectionsFrom(g, node_getId(n)), i = node_getConnect(n) -1, id = ids[i]; i > -1; id = ids[--i])
+            for (ids = graph_getConnectionsFrom(g, node_getId(n)), i = node_getConnect(n) - 1, id = ids[i]; i > -1; id = ids[--i])
             {
 
                 if (id == node_getId(to))
@@ -438,14 +436,17 @@ Stack *graph_findDeepSearch_getPath(Graph *g, Node *v, Node *to)
     return NULL;
 }
 
-Stack * recupera_camino(Graph* g, Stack * s, Node * to){
-    Node * n, *naux;
-    Stack * saux = stack_ini((P_stack_ele_destroy)node_destroy, (P_stack_ele_copy)node_copy, (P_stack_ele_print)node_print);
-    
-    while (stack_isEmpty(s) == FALSE){
+Stack *recupera_camino(Graph *g, Stack *s, Node *to)
+{
+    Node *n, *naux;
+    Stack *saux = stack_ini((P_stack_ele_destroy)node_destroy, (P_stack_ele_copy)node_copy, (P_stack_ele_print)node_print);
+
+    while (stack_isEmpty(s) == FALSE)
+    {
         n = stack_pop(s);
-        naux = graph_getNode(g,node_getId(n));
-        if (node_getEtiqueta(naux) == NEGRO) {
+        naux = graph_getNode(g, node_getId(n));
+        if (node_getEtiqueta(naux) == NEGRO)
+        {
             stack_push(saux, (void *)naux);
         }
         node_destroy(n);
@@ -454,6 +455,56 @@ Stack * recupera_camino(Graph* g, Stack * s, Node * to){
     return saux;
 }
 
+Node *graph_findBreadthSearch(Graph *g, Node *v, Node *to)
+{
+    Queue *s = queue_ini((P_stack_ele_destroy)node_destroy, (P_stack_ele_copy)node_copy, (P_stack_ele_print)node_print);
+    Node *n, *naux;
+    int id, *ids, i;
+
+    if (!g || !v || !to || !s)
+    {
+        return NULL;
+    }
+
+    queue_insert(s, (void *)v);
+
+    while (queue_isEmpty(s) == FALSE)
+    {
+        n = (Node *)queue_extract(s);
+
+        if (node_getEtiqueta(n) == BLANCO)
+        {
+            node_setEtiqueta(n, NEGRO);
+            graph_setNode(g, n);
+
+            for (ids = graph_getConnectionsFrom(g, node_getId(n)), i = node_getConnect(n) - 1, id = ids[i]; i > -1; id = ids[--i])
+            {
+
+                if (id == node_getId(to))
+                {
+                    free(ids);
+                    node_destroy(n);
+                    queue_destroy(s);
+                    return graph_getNode(g, id);
+                }
+
+                naux = graph_getNode(g, id);
+                if (node_getEtiqueta(naux) == BLANCO)
+                {
+                    queue_insert(s, (void *)naux);
+                }
+                node_destroy(naux);
+            }
+            free(ids);
+        }
+
+        node_destroy(n);
+    }
+
+    queue_destroy(s);
+
+    return NULL;
+}
 
 Status graph_readFromFile(FILE *fin, Graph *g)
 {

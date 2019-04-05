@@ -9,7 +9,7 @@ HEADERS = -I includes
 SRC = src/
 SRCLIB = srclib/
 
-EXE = p1_e1 p1_e2 p2_e1 p2_e2 p2_e1_pf p2_e2_pf p2_e4
+EXE = p1_e1 p1_e2 p2_e1 p2_e2 p2_e1_pf p2_e2_pf p2_e4 p3_testqueue
 
 all: clean $(EXE) clear
 
@@ -26,7 +26,7 @@ libsource_node.a: node.o graph.o stack_elestack.o  elestack_node.o
 libsource_int.a: node.o graph.o stack_elestack.o  elestack_int.o 
 	ar rcs lib/$@ $^
 
-libsource.a: node.o graph.o stack_fp.o elestack_int.o
+libsource.a: node.o graph.o stack_fp.o elestack_int.o queue.o
 	ar rcs lib/$@ $^
 
 p1_e1: $(SRC)p1_e1.c libsource_node.a
@@ -48,6 +48,12 @@ p2_e2_pf: $(SRC)p2_e2_pf.c libsource.a
 	$(CC) $(CFLAGS) $< $(HEADERS) $(LIB) -o $@
 
 p2_e4: $(SRC)p2_e4.c libsource.a
+	$(CC) $(CFLAGS) $< $(HEADERS) $(LIB) -o $@
+
+p3_testqueue: $(SRC)p3_testqueue.c libsource.a
+	$(CC) $(CFLAGS) $< $(HEADERS) $(LIB) -o $@
+
+p3_e1: $(SRC)p3_e1.c libsource.a
 	$(CC) $(CFLAGS) $< $(HEADERS) $(LIB) -o $@
 
 
@@ -87,6 +93,13 @@ elestack_node.o : $(SRCLIB)elestack_node.c
 	$(CC) $(CFLAGS) $(COMPILE) $^ $(HEADERS)
 
 elestack_int.o : $(SRCLIB)elestack_int.c
+	@echo "#---------------------------"
+	@echo "# Generando $@"
+	@echo "# Depende de $^"
+	@echo "# Ha cambiado $<"
+	$(CC) $(CFLAGS) $(COMPILE) $^ $(HEADERS)
+
+queue.o : $(SRCLIB)queue.c
 	@echo "#---------------------------"
 	@echo "# Generando $@"
 	@echo "# Depende de $^"
