@@ -84,4 +84,6 @@ Node *graph_findBreadthSearch(Graph *g, Node *v, Node *to);
 
 Stack * graph_findDeepSearch_getPath(Graph *g, Node *v, Node *to);
 
+Node *graph_findBreadthSearch(Graph *g, Node *v, Node *to);
+
 #endif /* GRAPH_H */

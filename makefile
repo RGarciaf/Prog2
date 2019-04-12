@@ -9,24 +9,25 @@ HEADERS = -I includes
 SRC = src/
 SRCLIB = srclib/
 
-EXE = p1_e1 p1_e2 p2_e1 p2_e2 p2_e1_pf p2_e2_pf p2_e4 p3_testqueue
+EXE = p1_e1 p1_e2 p2_e1 p2_e2 p2_e1_pf p2_e2_pf p2_e4 p3_testqueue p3_e1 p3_e2
 
 all: clean $(EXE) clear
 
 
 clean:
 	rm -f $(EXE) *.o *.h.gch lib/*
+	touch lib/.noMeBorres 
 
 clear:
 	rm -f *.o *.h.gch 
 
-libsource_node.a: node.o graph.o stack_elestack.o  elestack_node.o  
+libsource_node.a: node.o graph.o stack_elestack.o  elestack_node.o  queue.o
 	ar rcs lib/$@ $^
 
-libsource_int.a: node.o graph.o stack_elestack.o  elestack_int.o 
+libsource_int.a: node.o graph.o stack_elestack.o  elestack_int.o queue.o
 	ar rcs lib/$@ $^
 
-libsource.a: node.o graph.o stack_fp.o elestack_int.o queue.o
+libsource.a: node.o graph.o stack_fp.o elestack_int.o queue.o list.o int.o
 	ar rcs lib/$@ $^
 
 p1_e1: $(SRC)p1_e1.c libsource_node.a
@@ -54,6 +55,9 @@ p3_testqueue: $(SRC)p3_testqueue.c libsource.a
 	$(CC) $(CFLAGS) $< $(HEADERS) $(LIB) -o $@
 
 p3_e1: $(SRC)p3_e1.c libsource.a
+	$(CC) $(CFLAGS) $< $(HEADERS) $(LIB) -o $@
+
+p3_e2: $(SRC)p3_e2.c libsource.a
 	$(CC) $(CFLAGS) $< $(HEADERS) $(LIB) -o $@
 
 
@@ -106,10 +110,16 @@ queue.o : $(SRCLIB)queue.c
 	@echo "# Ha cambiado $<"
 	$(CC) $(CFLAGS) $(COMPILE) $^ $(HEADERS)
 
-execute: ejercicio1_execute 
+list.o : $(SRCLIB)list.c
+	@echo "#---------------------------"
+	@echo "# Generando $@"
+	@echo "# Depende de $^"
+	@echo "# Ha cambiado $<"
+	$(CC) $(CFLAGS) $(COMPILE) $^ $(HEADERS)
 
-ejercicio1_execute:
-		@echo Ejecutando $@
-		@echo "./p1_e1 
-		@./p1_e1
-		@echo "\n"
+int.o : $(SRCLIB)int.c
+	@echo "#---------------------------"
+	@echo "# Generando $@"
+	@echo "# Depende de $^"
+	@echo "# Ha cambiado $<"
+	$(CC) $(CFLAGS) $(COMPILE) $^ $(HEADERS)

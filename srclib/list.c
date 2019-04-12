@@ -5,6 +5,7 @@ typedef struct _NodeList
     void *info;
     struct _NodeList *next;
 } NodeList; /* Tipo NodeList privado */
+
 struct _List
 {
     NodeList *last; /*La LEC apunta al último nodo y el último al primero*/
@@ -14,9 +15,12 @@ struct _List
     cmp_element_function_type cmp_element_function;
 };
 
-NodeList *nodelist_ini(List *l, void *info, NodeList *next);
+NodeList * nodelist_ini(List *l, const void *info, NodeList *next);
 void nodelist_destroy(List *l, NodeList *nl);
+Status nodelist_insertInOrder(List *l, NodeList *nl, const void *pelem);
 NodeList *nodelist_findPreviouse(NodeList *nl, NodeList *objetive);
+const void *nodelist_get(const NodeList *nl, int index);
+int nodelist_get_size(NodeList *nl, NodeList *last);
 
 List *list_ini(destroy_element_function_type f1, copy_element_function_type f2, print_element_function_type f3, cmp_element_function_type f4)
 {
@@ -32,10 +36,12 @@ List *list_ini(destroy_element_function_type f1, copy_element_function_type f2, 
     l->print_element_function = f3;
     l->cmp_element_function = f4;
 
+    l->last = NULL;
+
     return l;
 }
 
-NodeList *nodelist_ini(List *l, void *info, NodeList *next)
+NodeList * nodelist_ini(List *l, const void *info, NodeList *next)
 {
     NodeList *nl = (NodeList *)malloc(sizeof(NodeList));
 
@@ -68,7 +74,7 @@ void nodelist_destroy(List *l, NodeList *nl)
     }
 
     l->destroy_element_function(nl->info);
-    nodelist_destroy(nl->next);
+    nodelist_destroy(l, nl->next);
     free(nl);
 }
 
@@ -81,12 +87,19 @@ Status list_insertFirst(List *l, const void *pelem)
         return ERROR;
     }
 
-    if (!(aux = nodelist_ini(l, pelem, l->last->next)))
+    aux = nodelist_ini(l, pelem, l->last->next);
+    if (!aux)
     {
         return ERROR;
     }
 
-    l->last->next = aux;
+    if (list_isEmpty(l) == TRUE) {
+        l->last = aux;
+        aux->next = aux;
+    } else
+    {
+        l->last->next = aux;
+    }
 
     return OK;
 }
@@ -105,10 +118,18 @@ Status list_insertLast(List *l, const void *pelem)
         return ERROR;
     }
 
-    l->last->next = aux;
+    if (list_isEmpty(l) == TRUE) {
+        l->last = aux;
+        aux->next = aux;
+    } else
+    {
+        l->last->next = aux;
 
-    l->last = aux;
+        l->last = aux;
 
+    }   
+
+    
     return OK;
 }
 
@@ -119,12 +140,16 @@ Status list_insertInOrder(List *l, const void *pelem)
         return ERROR;
     }
 
-    if (l->cmp_element_function(l->last->info, pelem) <= 0)
+    if(list_isEmpty(l) == TRUE){
+        return list_insertLast(l, pelem);
+    }
+
+    if (l->cmp_element_function(l->last->info, pelem) <= 0) /* Si el segundo argumento es mayor, devuelve negativo o 0 si es igual */
     {
         return list_insertLast(l, pelem);
     }
 
-    return nodelist_insertInOrder(l, l->last->next, pelem);
+    return nodelist_insertInOrder(l, l->last, pelem);
 }
 
 Status nodelist_insertInOrder(List *l, NodeList *nl, const void *pelem)
@@ -136,14 +161,15 @@ Status nodelist_insertInOrder(List *l, NodeList *nl, const void *pelem)
         return ERROR;
     }
 
-    if (l->cmp_element_function(nl->next->info, pelem) >= 0)
+    if (l->cmp_element_function(nl->next->info, pelem) >= 0) /* Si el primero es mayor que el segundo, lo insertamos antes */ 
     {
-        if (!(aux = nodelist_ini(l, pelem, nl->next)))
+        if (!(aux = nodelist_ini(l, pelem, nl->next)))  /* Creo un nodo que su next apunta al next de nl */
         {
             return ERROR;
         }
+
         nl->next = aux;
-        return Ok;
+        return OK;
     }
 
     return nodelist_insertInOrder(l, nl->next, pelem);
@@ -158,6 +184,16 @@ void *list_extractFirst(List *l)
         return NULL;
     }
 
+    if(list_isEmpty(l) == TRUE){
+        return NULL;
+    }
+
+    if(list_size(l) == 1){
+        aux = l->last;
+        l->last = NULL;
+        return aux;    
+    }
+
     aux = l->last->next;
 
     l->last->next = l->last->next->next;
@@ -167,11 +203,21 @@ void *list_extractFirst(List *l)
 
 void *list_extractLast(List *l)
 {
-    NodeList *aux, nl;
+    NodeList *aux, * nl;
 
     if (!l)
     {
         return NULL;
+    }
+
+    if(list_isEmpty(l) == TRUE){
+        return NULL;
+    }
+
+    if(list_size(l) == 1){
+        aux = l->last;
+        l->last = NULL;
+        return aux;    
     }
 
     aux = nodelist_findPreviouse(l->last->next, l->last);
@@ -192,6 +238,10 @@ NodeList *nodelist_findPreviouse(NodeList *nl, NodeList *objetive)
         return NULL;
     }
 
+    if (nl == objetive){
+        return NULL;
+    }    
+
     if (nl->next != objetive)
     {
         return nodelist_findPreviouse(nl->next, objetive);
@@ -207,7 +257,7 @@ Bool list_isEmpty(const List *l)
         return FALSE;
     }
 
-    return l->last ? TRUE : FALSE;
+    return l->last == NULL ? TRUE : FALSE;
 }
 
 const void *list_get(const List *l, int index)
@@ -236,8 +286,61 @@ const void *nodelist_get(const NodeList *nl, int index)
 
 int list_size(const List *l)
 {
+    if (!l)
+    {
+        return -1;
+    }
+
+    if (list_isEmpty(l) == TRUE){
+        return 0;
+    }
+
+    return nodelist_get_size(l->last->next, l->last);
+}
+
+int nodelist_get_size(NodeList *nl, NodeList *last)
+{
+    if (!nl)
+    {
+        return -999;
+    }
+
+    if (nl != last)
+    {
+        return 1 + nodelist_get_size(nl->next, last);
+    }
+
+    return 1;
 }
 
 int list_print(FILE *fd, const List *l)
 {
+    NodeList* nl = NULL;
+    int ret = 0;
+
+    if(!fd || !l){
+        return -1;
+    }
+
+    if(list_isEmpty(l) == TRUE){
+        return 0;
+    }
+
+    if(list_size(l) == 1){
+        return l->print_element_function(fd, l->last->info);
+    }
+
+    nl = l->last;
+    do{
+        nl = nl->next;
+        ret += l->print_element_function(fd, nl->info);
+    }while(l->last != nl);
+
+    return ret;
+
+
+    /*for(nl = l->last->next; l->last != nl; nl = nl->next){
+        l->print_element_function(fd, nl->info);
+    }
+    l->print_element_function(fd, nl->info);*/ /* Cuando llega al ultimo elemento sale del bucle por lo que no lo llega a imprimir */
 }

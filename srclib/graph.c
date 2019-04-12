@@ -1,4 +1,5 @@
 #include "graph.h"
+#include "queue.h"
 
 int graph_getNode_index(Graph *g, int id);
 Stack *recupera_camino(Graph *g, Stack *s, Node *to);

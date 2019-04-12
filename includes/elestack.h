@@ -41,4 +41,6 @@ Bool EleStack_equals(const EleStack *, const EleStack *);
 */
 int EleStack_print(FILE *, const EleStack *);
 
+int EleStack_cmp(const void * ele1, const void *ele2);
+
 #endif

@@ -93,6 +93,17 @@ Bool EleStack_equals(const EleStack *ele1, const EleStack *ele2)
     return ele1->info != ele2->info ? FALSE : TRUE;
 }
 
+int EleStack_cmp(const void *ele1, const void *ele2)
+{
+
+    if (!ele1 || !ele2)
+    {
+        return FALSE;
+    }
+
+    return ((EleStack *) ele1)->info - ((EleStack *) ele2)->info;
+}
+
 int EleStack_print(FILE *f, const EleStack *ele)
 {
 
