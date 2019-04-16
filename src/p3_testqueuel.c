@@ -1,27 +1,28 @@
-/* * File:   p3_testqueue.c* Author: Profesores de PROG2*/
+/* * File:   p3_testqueuel.c* Author: Profesores de PROG2*/
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <errno.h>
-#include "queue.h"
+#include "queuel.h"
 #include "node.h"
-void mainCleanUp(Queue *q1, Queue *q2, Queue *q3, Node *pn, FILE *pf)
+
+void mainCleanUp(Queuel *q1, Queuel *q2, Queuel *q3, Node *pn, FILE *pf)
 {
     if (pn)
         node_destroy(pn);
     if (q1)
-        queue_destroy(q1);
+        queuel_destroy(q1);
     if (q2)
-        queue_destroy(q2);
+        queuel_destroy(q2);
     if (q3)
-        queue_destroy(q3);
+        queuel_destroy(q3);
     if (pf)
         fclose(pf);
 }
 int main(int argc, char **argv)
 {
     FILE *pf = NULL;
-    Queue *q1 = NULL, *q2 = NULL, *q3 = NULL;
+    Queuel *q1 = NULL, *q2 = NULL, *q3 = NULL;
     Node *pn = NULL;
     int id, i, npoints, middle;
     char name[MAX];
@@ -56,9 +57,9 @@ int main(int argc, char **argv)
         mainCleanUp(q1, q2, q3, pn, pf);
         return EXIT_FAILURE;
     }
-    q1 = queue_ini((destroy_element_function_type)node_destroy, (copy_element_function_type)node_copy, (print_element_function_type)node_print);
-    q2 = queue_ini((destroy_element_function_type)node_destroy, (copy_element_function_type)node_copy, (print_element_function_type)node_print);
-    q3 = queue_ini((destroy_element_function_type)node_destroy, (copy_element_function_type)node_copy, (print_element_function_type)node_print);
+    q1 = queuel_ini((destroy_element_function_type)node_destroy, (copy_element_function_type)node_copy, (print_element_function_type)node_print, (cmp_element_function_type)node_cmp);
+    q2 = queuel_ini((destroy_element_function_type)node_destroy, (copy_element_function_type)node_copy, (print_element_function_type)node_print, (cmp_element_function_type)node_cmp);
+    q3 = queuel_ini((destroy_element_function_type)node_destroy, (copy_element_function_type)node_copy, (print_element_function_type)node_print, (cmp_element_function_type)node_cmp);
     if (!q1 || !q2 || !q3)
     {
         fprintf(stderr, "Error: inicializacion de cola.\n");
@@ -67,11 +68,11 @@ int main(int argc, char **argv)
     }
     printf("Inicialmente:\n");
     printf("Cola 1: ");
-    queue_print(stdout, q1);
+    queuel_print(stdout, q1);
     printf("Cola 2: ");
-    queue_print(stdout, q2);
+    queuel_print(stdout, q2);
     printf("Cola 3: ");
-    queue_print(stdout, q3);
+    queuel_print(stdout, q3);
     printf("Añadiendo %d elementos a q1:\n", npoints);
     for (i = 0; i < npoints; i++)
     {
@@ -89,29 +90,29 @@ int main(int argc, char **argv)
         }
         node_setId(pn, id);
         node_setName(pn, name);
-        if (queue_insert(q1, pn) == ERROR)
+        if (queuel_insert(q1, pn) == ERROR)
         {
             fprintf(stderr, "Error: inserción en cola.\n");
             mainCleanUp(q1, q2, q3, pn, pf);
             return EXIT_FAILURE;
         }
         printf("Cola 1: ");
-        queue_print(stdout, q1);
+        queuel_print(stdout, q1);
         printf("Cola 2: ");
-        queue_print(stdout, q2);
+        queuel_print(stdout, q2);
         printf("Cola 3: ");
-        queue_print(stdout, q3);
+        queuel_print(stdout, q3);
         printf("\n");
     }
     node_destroy(pn);
     pn = NULL;
     printf("\n<<<Pasando la primera mitad de Cola 1 a Cola 2\n");
-    npoints = queue_size(q1);
+    npoints = queuel_size(q1);
     middle = npoints / 2;
     for (i = 0; i < middle; i++)
     {
-        pn = queue_extract(q1);
-        if (queue_insert(q2, pn) == ERROR)
+        pn = queuel_extract(q1);
+        if (queuel_insert(q2, pn) == ERROR)
         {
             fprintf(stderr, "Error: inserción en cola 2.\n");
             mainCleanUp(q1, q2, q3, pn, pf);
@@ -120,18 +121,18 @@ int main(int argc, char **argv)
         node_destroy(pn);
         pn = NULL;
         printf("Cola 1: ");
-        queue_print(stdout, q1);
+        queuel_print(stdout, q1);
         printf("Cola 2: ");
-        queue_print(stdout, q2);
+        queuel_print(stdout, q2);
         printf("Cola 3: ");
-        queue_print(stdout, q3);
+        queuel_print(stdout, q3);
         printf("\n");
     }
     printf("\n<<<Pasando la segunda mitad de Cola 1 a Cola 3\n");
     for (i = npoints / 2; i < npoints; i++)
     {
-        pn = queue_extract(q1);
-        if (queue_insert(q3, pn) == ERROR)
+        pn = queuel_extract(q1);
+        if (queuel_insert(q3, pn) == ERROR)
         {
             fprintf(stderr, "Error: inserción en cola 3.\n");
             mainCleanUp(q1, q2, q3, pn, pf);
@@ -140,11 +141,11 @@ int main(int argc, char **argv)
         node_destroy(pn);
         pn = NULL;
         printf("Cola 1: ");
-        queue_print(stdout, q1);
+        queuel_print(stdout, q1);
         printf("Cola 2: ");
-        queue_print(stdout, q2);
+        queuel_print(stdout, q2);
         printf("Cola 3: ");
-        queue_print(stdout, q3);
+        queuel_print(stdout, q3);
         printf("\n");
     } /* Liberar todo*/
     mainCleanUp(q1, q2, q3, pn, pf);

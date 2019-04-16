@@ -1,14 +1,11 @@
-#include "queue.h"
-#include "graph.h"
-#include "node.h"
 #include "list.h"
 #include "int.h"
 #include <stdio.h>
 #include <stdlib.h>
 
  int main(int argc, char ** argv){
-   List * l1 = list_ini(free, int_copy, int_print, int_cmp );
-   List * l2 = list_ini(free, int_copy, int_print, int_cmp );
+   List * l1 = list_ini(int_destroy, int_copy, int_print, int_cmp );
+   List * l2 = list_ini(int_destroy, int_copy, int_print, int_cmp );
     int i;
 
     if(argc != 2){
@@ -18,11 +15,11 @@
    
     for(i = 0; i < atoi(argv[1]); i++){
         if(i%2 == 0){
-            list_insertFirst(l1, &i);
+            list_insertFirst(l1, (void*)&i);
         } else {
-            list_insertLast(l1, &i);
+            list_insertLast(l1, (void*)&i);
         }
-        list_insertInOrder(l2, &i);
+        list_insertInOrder(l2, (void*)&i);
     }
 
     list_print(stdout, l1);

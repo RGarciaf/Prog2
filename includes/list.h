@@ -5,18 +5,14 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-
 typedef struct _List List;
 /* Tipos de los punteros a función soportados por la lista. Nota: podrían estar en elem_functions.h e incluirlo aquí  */
 
-typedef void (*destroy_element_function_type)(void *);
-typedef void * (*copy_element_function_type)(const void *);
-typedef int (*print_element_function_type)(FILE *, const void *);
-typedef int (*cmp_element_function_type)(const void *, const void *);
+
 /*El  último  tipo  de  funciones,  cmp, serán  aquellas  que  sirvan  para  comparar  dos  elementos,  devolviendo un  número positivo, negativo o cero según sea el primer argumento mayor, menor o igual que el segundo */
 
 /* Inicializa la lista reservando memoria e inicializa todos sus elementos. */
-List * list_ini(destroy_element_function_type f1, copy_element_function_type f2, print_element_function_type f3, cmp_element_function_type f4);
+List *list_ini(destroy_element_function_type f1, copy_element_function_type f2, print_element_function_type f3, cmp_element_function_type f4);
 
 /* Libera la lista, liberandotodos sus elementos. */
 void list_destroy(List *list);
@@ -58,7 +54,7 @@ de la lista. En caso de error, devuelve NULL. */
 const void *list_get(const List *list, int index);
 
 /* Devuelve el número de elementos que hay en una lista. */
-int list_size(const List *list); 
+int list_size(const List *list);
 
 /* Imprime una lista devolviendo el número de caracteres escritos. */
 int list_print(FILE *fd, const List *list);

@@ -21,7 +21,7 @@ int int_print(FILE * fd, const void * i){
         return -1;
     }
 
-    return fprintf(fd, "%d", *(int*)i);
+    return fprintf(fd, "%d\n", *(int*)i);
 }
 
 int int_cmp(const void * i1, const void *i2){
@@ -30,4 +30,8 @@ int int_cmp(const void * i1, const void *i2){
     }
 
     return *(int*)i1 - *(int*)i2;
+}
+
+void int_destroy(void * i){
+    free(i);
 }

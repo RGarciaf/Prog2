@@ -2,6 +2,7 @@
     "C_Cpp.errorSquiggles": "Disabled",
     "C_Cpp.intelliSenseEngineFallback": "Disabled",
     "files.associations": {
-        "stack_fp.h": "c"
+        "stack_fp.h": "c",
+        "queuel.h": "c"
     }
 }
