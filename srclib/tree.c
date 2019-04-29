@@ -40,6 +40,8 @@ Tree *tree_ini(destroy_element_function_type f1, copy_element_function_type f2, 
     t->print_element_function = f3;
     t->cmp_element_function = f4;
 
+    t->root = NULL;
+
     return t;
 }
 
@@ -81,6 +83,7 @@ void tree_free(Tree *t)
     }
 
     nodebt_destroy(t, t->root);
+    free(t);
 }
 
 void nodebt_destroy(Tree *t, NodeBT *node)
@@ -92,6 +95,8 @@ void nodebt_destroy(Tree *t, NodeBT *node)
 
     nodebt_destroy(t, node->left);
     nodebt_destroy(t, node->right);
+    
+    free(node);
 }
 
 Status tree_insert(Tree *t, const void *po)
@@ -172,9 +177,9 @@ Status nodebt_inOrder(FILE *f, const Tree *t, NodeBT *node)
     if (!f || !t || !node)
         return ERROR;
 
-    nodebt_preOrder(f, t, node->left);
+    nodebt_inOrder(f, t, node->left);
     t->print_element_function(f, node->info);
-    nodebt_preOrder(f, t, node->right);
+    nodebt_inOrder(f, t, node->right);
 
     return OK;
 }
@@ -195,8 +200,8 @@ Status nodebt_postOrder(FILE *f, const Tree *t, NodeBT *node)
     if (!f || !t || !node)
         return ERROR;
 
-    nodebt_preOrder(f, t, node->left);
-    nodebt_preOrder(f, t, node->right);
+    nodebt_postOrder(f, t, node->left);
+    nodebt_postOrder(f, t, node->right);
     t->print_element_function(f, node->info);
 
     return OK;

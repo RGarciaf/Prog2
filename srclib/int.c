@@ -24,6 +24,16 @@ int int_print(FILE * fd, const void * i){
     return fprintf(fd, "%d\n", *(int*)i);
 }
 
+int int_print_tree(FILE *fd, const void *i)
+{
+    if (!i)
+    {
+        return -1;
+    }
+
+    return fprintf(fd, " %d", *(int *)i);
+}
+
 int int_cmp(const void * i1, const void *i2){
     if(!i1 || !i2){
         return -1;

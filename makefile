@@ -4,12 +4,13 @@ COMPILE = -c
 LIB_NODE = -Llib -lsource_node
 LIB_INT = -Llib -lsource_int
 LIB = -Llib -lsource
+LIB_P4 = -Llib -lsource_p4
 HEADERS = -I includes
 
 SRC = src/
 SRCLIB = srclib/
 
-EXE = p1_e1 p1_e2 p2_e1 p2_e2 p2_e1_pf p2_e2_pf p2_e4 p3_testqueue p3_e1 p3_e2 p3_testqueuel
+EXE = p1_e1 p1_e2 p2_e1 p2_e2 p2_e1_pf p2_e2_pf p2_e4 p3_testqueue p3_e1 p3_e2 p3_testqueuel p4_e1 p4_e2
 
 all: clean $(EXE) clear
 
@@ -30,7 +31,7 @@ libsource_int.a: node.o graph.o stack_elestack.o  elestack_int.o queue.o
 libsource.a: node.o graph.o stack_fp.o elestack_int.o queue.o list.o int.o queuel.o tree.o
 	ar rcs lib/$@ $^
 
-libsource_p4.a: node.o int.o  tree.o
+libsource_p4.a: int.o  tree.o
 	ar rcs lib/$@ $^
 
 p1_e1: $(SRC)p1_e1.c libsource_node.a
@@ -65,6 +66,12 @@ p3_e2: $(SRC)p3_e2.c libsource.a
 
 p3_testqueuel: $(SRC)p3_testqueuel.c libsource.a
 	$(CC) $(CFLAGS) $< $(HEADERS) $(LIB) -o $@
+
+p4_e1: $(SRC)p4_e1.c libsource_p4.a
+	$(CC) $(CFLAGS) $< $(HEADERS) $(LIB_P4) -o $@
+
+p4_e2: $(SRC)p4_e2.c libsource_p4.a
+	$(CC) $(CFLAGS) $< $(HEADERS) $(LIB_P4) -o $@
 
 
 node.o : $(SRCLIB)node.c
