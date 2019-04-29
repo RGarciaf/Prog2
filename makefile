@@ -27,7 +27,10 @@ libsource_node.a: node.o graph.o stack_elestack.o  elestack_node.o  queue.o
 libsource_int.a: node.o graph.o stack_elestack.o  elestack_int.o queue.o
 	ar rcs lib/$@ $^
 
-libsource.a: node.o graph.o stack_fp.o elestack_int.o queue.o list.o int.o queuel.o
+libsource.a: node.o graph.o stack_fp.o elestack_int.o queue.o list.o int.o queuel.o tree.o
+	ar rcs lib/$@ $^
+
+libsource_p4.a: node.o int.o  tree.o
 	ar rcs lib/$@ $^
 
 p1_e1: $(SRC)p1_e1.c libsource_node.a
@@ -128,6 +131,13 @@ int.o : $(SRCLIB)int.c
 	$(CC) $(CFLAGS) $(COMPILE) $^ $(HEADERS)
 
 queuel.o : $(SRCLIB)queuel.c
+	@echo "#---------------------------"
+	@echo "# Generando $@"
+	@echo "# Depende de $^"
+	@echo "# Ha cambiado $<"
+	$(CC) $(CFLAGS) $(COMPILE) $^ $(HEADERS)
+
+tree.o : $(SRCLIB)tree.c
 	@echo "#---------------------------"
 	@echo "# Generando $@"
 	@echo "# Depende de $^"
