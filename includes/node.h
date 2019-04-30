@@ -5,7 +5,7 @@
 #include <string.h>
 #include "types.h"
 
-#define MAX 100
+#define MAX 300
 
 typedef enum
 {
@@ -67,6 +67,8 @@ Node *node_copy(const Node *src);
  * Comprueba si ha habido errores en el flujo de salida, en ese caso imprime
  * mensaje de error en stderror*/
 int node_print(FILE *pf, const Node *n);
+
+int nodeTree_print(FILE *pf, const Node *n);
 
 Node *nodeIni(int id, char *name);
 

@@ -5,11 +5,9 @@
 
 #include "tree.h"
 #include "node.h"
-#include "functions.h"
 #include "types.h"
 
 #define MAX_LINE 350
-#define MAX 300
 
 Node* read_node_from_file(FILE* f_in){
 	Node* node = NULL;
@@ -84,7 +82,7 @@ void balance(Node** data, Tree *t, int first, int last) {
 Tree* loadBalancedTreeFromData(Node** data, int n) {
 	Tree* t;
 	
-	t = tree_ini(destroy_node_function, copy_node_function, print_node_function, cmp_node_function);
+	t = tree_ini((destroy_element_function_type) node_destroy, (copy_element_function_type) node_copy, (print_element_function_type) nodeTree_print, (cmp_element_function_type) node_cmp);
 	
     balance(data, t, 0, n - 1);
     
@@ -96,7 +94,7 @@ Tree* loadTreeFromData(Node** data, int n) {
 	Node* node;
 	int i;
 	
-	t = tree_ini(destroy_node_function, copy_node_function, print_node_function, cmp_node_function);
+	t = tree_ini((destroy_element_function_type)node_destroy, (copy_element_function_type)node_copy, (print_element_function_type)nodeTree_print, (cmp_element_function_type)node_cmp);
 
 	for (i=0; i<n; i++){
 		node = data[i];

@@ -24,6 +24,8 @@ struct _Node
     int antecesor_id;
 };
 
+int abs(int n);
+
 /*=== Funciones =============================================================*/
 
 Node *node_ini()
@@ -82,7 +84,7 @@ Label node_getAntecesor(const Node *n)
     return n->antecesor_id;
 }
 
-Node *node_setAntecesor( Node *n, int antecesor_id)
+Node *node_setAntecesor(Node *n, int antecesor_id)
 {
     n->antecesor_id = antecesor_id;
     return n;
@@ -111,7 +113,17 @@ Node *node_setConnect(Node *n, const int cn)
 
 int node_cmp(const Node *n1, const Node *n2)
 {
-    return n1->id == n2->id && strcmp(n1->name, n2->name);
+    if(n1->id == n2->id)
+        return strcmp(n1->name, n2->name);
+
+    return n1->id - n2->id;
+}
+
+int abs(int n)
+{
+    if (n < 0)
+        return n * -1;
+    return n;
 }
 
 Node *node_copy(const Node *n1)
@@ -143,6 +155,15 @@ int node_print(FILE *pf, const Node *node)
         return -1;
 
     return fprintf(pf, "[%d, %s, %d] ", node->id, node->name, node->nConnect);
+}
+
+int nodeTree_print(FILE *pf, const Node *node)
+{
+
+    if (!pf || !node)
+        return -1;
+
+    return fprintf(pf, "[%d, %s] ", node->id, node->name);
 }
 
 Node *nodeIni(int id, char *name)
