@@ -4,5 +4,6 @@
     "files.associations": {
         "stack_fp.h": "c",
         "queuel.h": "c"
-    }
+    },
+    "C_Cpp.dimInactiveRegions": false
 }

@@ -16,7 +16,7 @@ Fecha: 06-02-2019
 
 struct _Node
 {
-    char name[100];
+    char name[MAX];
     int id;
     int nConnect;
 
