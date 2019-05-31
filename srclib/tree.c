@@ -26,6 +26,7 @@ Status nodebt_postOrder(FILE *f, const Tree *t, NodeBT *node);
 int nodebt_depth(NodeBT *node);
 int nodebt_numNodes(NodeBT *node);
 Bool nodebt_find(Tree *t, NodeBT *node, const void *po);
+List * nodebt_inorder_list(const Tree * t, NodeBT * node, List * l );
 
 
 Tree *tree_ini(destroy_element_function_type f1, copy_element_function_type f2, print_element_function_type f3, cmp_element_function_type f4)
@@ -263,4 +264,53 @@ Bool nodebt_find(Tree *t, NodeBT *node, const void *po)
         return nodebt_find(t, node->right, po);
 
     return TRUE;
+}
+
+List * tree_inorder_list(const Tree* t){
+    List * l;
+
+    if(!t)
+        return NULL;
+    if(!t->root)
+        return NULL;
+
+    if(!(l = list_ini(t->destroy_element_function, t->copy_element_function, t->print_element_function, t->cmp_element_function)))
+        return NULL;
+    
+    return nodebt_inorder_list(t, t->root, l);
+}
+
+List * nodebt_inorder_list(const Tree * t, NodeBT * node, List * l ){
+    if (!node)
+        return l;
+
+    nodebt_inorder_list(t, node->left, l);
+    list_insertLast(l, node->info);
+    nodebt_inorder_list(t, node->right, l);
+
+    return l;
+}
+
+void * tree_inorder_predecesor(const Tree * t, const void * item){
+    List * l;
+    void *ret, * pr ;
+    int index;
+
+    if(!t || !item)
+        return NULL;
+    
+    l = tree_inorder_list(t);
+    
+    if((index = list_get_index(l, item)) == -1){
+        list_destroy(l);
+        return NULL;
+    }
+
+    ret = list_get(l, index -1);
+    printf("Antecesor de %s: ", (char *) (pr = list_get(l, index)));
+    t->print_element_function(stdout, ret);
+    printf("\n");
+    list_destroy(l);
+
+    return ret;
 }

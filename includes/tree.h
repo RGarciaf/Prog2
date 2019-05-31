@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include "list.h"
 #include "types.h"
 
 typedef struct _Tree Tree; 
@@ -31,5 +32,9 @@ int    tree_depth(const Tree *t);
 int    tree_numNodes(const Tree *t); 
 /* Devuelve TRUE si se puede encontrar el elemento pe en el árbol t */ 
 Bool    tree_find(Tree* t, const void* pe); 
+
+List * tree_inorder_list(const Tree* t);
+
+void * tree_inorder_predecesor(const Tree * t, const void * item);
 
 #endif // TREE_H

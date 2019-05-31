@@ -20,8 +20,9 @@ NodeList *nodelist_ini(List *l, const void *info, NodeList *next);
 void nodelist_destroy(List *l, NodeList *nl);
 Status nodelist_insertInOrder(List *l, NodeList *nl, const void *pelem);
 NodeList *nodelist_findPreviouse(NodeList *nl, NodeList *objetive);
-const void *nodelist_get(const NodeList *nl, int index);
+void *nodelist_get(const NodeList *nl, int index);
 int nodelist_get_size(NodeList *nl, NodeList *last);
+int nodelist_get_index(const List * l, NodeList *nl, const void * item, int index);
 
 List *list_ini(destroy_element_function_type f1, copy_element_function_type f2, print_element_function_type f3, cmp_element_function_type f4)
 {
@@ -315,7 +316,7 @@ Bool list_isEmpty(const List *l)
     return l->last == NULL ? TRUE : FALSE;
 }
 
-const void *list_get(const List *l, int index)
+void *list_get(const List *l, int index)
 {
     if (!l || index < 0)
     {
@@ -325,7 +326,7 @@ const void *list_get(const List *l, int index)
     return nodelist_get(l->last->next, index);
 }
 
-const void *nodelist_get(const NodeList *nl, int index)
+void * nodelist_get(const NodeList *nl, int index)
 {
     if (!nl || index < 0)
     {
@@ -405,4 +406,36 @@ int list_print(FILE *fd, const List *l)
     }
     l->print_element_function(fd, nl->info);*/
     /* Cuando llega al ultimo elemento sale del bucle por lo que no lo llega a imprimir */
+}
+
+int list_get_index(const List* l, const void * item){
+
+    if(!l || !item)
+        return -1;
+    
+    if(!l->last)
+        return -1;
+    
+    if(list_size(l) == 1){
+        if(l->cmp_element_function(l->last->info, item) == 0){
+            return 0;
+        }
+
+        return -1;
+    }
+        
+    
+    return nodelist_get_index(l, l->last->next, item, 0);       
+    
+}
+
+int nodelist_get_index(const List * l, NodeList *nl, const void * item, int index){
+    
+    if (l->cmp_element_function(nl->info, item) == 0)
+        return index;
+
+    if(l->cmp_element_function(l->last->info, nl->info) == 0)
+        return -1;
+    
+    return nodelist_get_index(l, nl->next, item, index +1);    
 }

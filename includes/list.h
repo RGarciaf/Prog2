@@ -51,12 +51,14 @@ Bool list_isEmpty(const List *list);
 
 /* Devuelve la información almacenada en el nodo i-ésimo 
 de la lista. En caso de error, devuelve NULL. */
-const void *list_get(const List *list, int index);
+ void *list_get(const List *list, int index);
 
 /* Devuelve el número de elementos que hay en una lista. */
 int list_size(const List *list);
 
 /* Imprime una lista devolviendo el número de caracteres escritos. */
 int list_print(FILE *fd, const List *list);
+
+int list_get_index(const List* l, const void * item);
 
 #endif // LIST_H
